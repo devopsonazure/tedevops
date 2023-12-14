@@ -1,4 +1,4 @@
-name: Azure Load Testing
+name: Load Testing
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
 jobs:
 
   loadtest:
-    name: Load Test
+    name: Load Testing
     runs-on: ubuntu-latest
     steps:
       - name: Checkout GitHub Actions 
@@ -18,22 +18,29 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
         
-      - name: 'Azure Load Testing'
+      - name: Azure Load Testing
+        id: azure_load_testing
         uses: azure/load-testing@v1
         with:
           loadTestConfigFile: './JMeter/tealt-dev.yaml'
           loadTestResource: ${{ secrets.ALT_NAME }}
           resourceGroup: ${{ secrets.AZURE_RG }}
 
+      - name: Save output
+        if: failure()
+        run: echo "${{ steps.azure_load_testing.outputs }}" > output.txt
+
       - name: Create Issue on Failure
         if: failure()
         uses: actions/github-script@v5
         with:
           script: |
+            const fs = require('fs');
+            const output = fs.readFileSync('output.txt', 'utf8');
             const issue = {
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: "Azure Load Testing failed",
-              body: "The Azure Load Testing step in the workflow failed. Please check the logs for more details."
+              body: output
             };
-            github.rest.issues.create(issue);          
+            github.rest.issues.create(issue);
