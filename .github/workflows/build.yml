@@ -1,0 +1,45 @@
+name: .NET
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Application/**'
+
+jobs:
+  build-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore Application/src/RazorPagesTestSample/RazorPagesTestSample.csproj
+    - name: Build
+      run: dotnet build --no-restore Application/src/RazorPagesTestSample/RazorPagesTestSample.csproj
+    - name: Test
+      run: dotnet test --no-build --verbosity normal Application/tests/RazorPagesTestSample.Tests/RazorPagesTestSample.Tests.csproj
+
+  build-image:
+    runs-on: ubuntu-latest
+
+    env:
+      registryName: ${{ secrets.ACR_USERNAME }}
+      repositoryName: techboost/dotnetcoreapp
+      dockerFolderPath: ./Application/src/RazorPagesTestSample
+      tag: ${{ github.run_number }}
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.registryName }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    - run: |
+        docker build ${{ env.dockerFolderPath }} -t ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
+        docker push ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
