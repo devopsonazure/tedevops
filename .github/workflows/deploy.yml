@@ -1,4 +1,4 @@
-name: Deploy ARM Template
+name: Deploy Infrastructure
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy ARM Template
+    - name: Deploy Infa from Bicep
       uses: azure/arm-deploy@v1
       with:
         scope: resourcegroup
