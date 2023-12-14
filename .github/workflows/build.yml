@@ -44,3 +44,18 @@ jobs:
         docker build ${{ env.dockerFolderPath }} -t ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
         docker push ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
 
+  deploy-dev:
+    needs: build-image
+    runs-on: ubuntu-latest
+    environment: 
+      name: dev
+    steps:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ secrets.APP_NAME }}
+        images: ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
