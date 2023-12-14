@@ -24,3 +24,16 @@ jobs:
           loadTestConfigFile: './JMeter/tealt-dev.yaml'
           loadTestResource: ${{ secrets.ALT_NAME }}
           resourceGroup: ${{ secrets.AZURE_RG }}
+
+      - name: Create Issue on Failure
+        if: failure()
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const issue = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: "Azure Load Testing failed",
+              body: "The Azure Load Testing step in the workflow failed. Please check the logs for more details."
+            };
+            github.issues.create(issue);          
