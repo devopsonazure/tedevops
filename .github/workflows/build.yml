@@ -1,5 +1,11 @@
 name: .NET
 
+env:
+  registryName: ${{ secrets.ACR_LOGIN_SERVER }}
+  repositoryName: techboost/dotnetcoreapp
+  dockerFolderPath: ./Application/src/RazorPagesTestSample
+  tag: ${{ github.run_number }}
+
 on:
   workflow_dispatch:
   push:
@@ -26,13 +32,7 @@ jobs:
 
   build-image:
     runs-on: ubuntu-latest
-
-    env:
-      registryName: ${{ secrets.ACR_LOGIN_SERVER }}
-      repositoryName: techboost/dotnetcoreapp
-      dockerFolderPath: ./Application/src/RazorPagesTestSample
-      tag: ${{ github.run_number }}
-    
+    needs: build-test
     steps:
     - uses: actions/checkout@v2
     - uses: azure/docker-login@v1
@@ -43,3 +43,4 @@ jobs:
     - run: |
         docker build ${{ env.dockerFolderPath }} -t ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
         docker push ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
+
