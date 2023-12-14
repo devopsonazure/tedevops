@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RazorPagesTestSample.Data;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
 
 namespace RazorPagesTestSample.Pages
 {
@@ -31,7 +32,7 @@ namespace RazorPagesTestSample.Pages
                 return $"{request.Scheme}://{request.Host}{request.PathBase}";
             }
         }
-        
+
         [TempData]
         public string MessageAnalysisResult { get; set; }
 
