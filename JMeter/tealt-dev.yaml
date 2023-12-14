@@ -1,0 +1,9 @@
+version: v0.1
+testId: TE-DEV
+displayName: TE-DEV Azure Load Testing
+description: Load test dev website home page
+testPlan: tealt.jmx
+testType: JMX
+engineInstances: 1
+properties:
+  userPropertyFile: 'tealt-dev.properties'

@@ -1,0 +1,26 @@
+name: Azure Load Testing
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  loadtest:
+    name: Load Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitHub Actions 
+        uses: actions/checkout@v2
+          
+      - name: Login to Azure
+        uses: azure/login@v1
+        continue-on-error: false
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+      - name: 'Azure Load Testing'
+        uses: azure/load-testing@v1
+        with:
+          loadTestConfigFile: './JMeter/tealt-dev.yaml'
+          loadTestResource: ${{ secrets.ALT_NAME }}
+          resourceGroup: ${{ secrets.AZURE_RG }}
