@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      registryName: ${{ secrets.ACR_USERNAME }}
+      registryName: ${{ secrets.ACR_LOGIN_SERVER }}
       repositoryName: techboost/dotnetcoreapp
       dockerFolderPath: ./Application/src/RazorPagesTestSample
       tag: ${{ github.run_number }}
