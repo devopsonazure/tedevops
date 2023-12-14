@@ -7,3 +7,5 @@ testType: JMX
 engineInstances: 1
 properties:
   userPropertyFile: 'tealt-dev.properties'
+failureCriteria:
+  - percentage(error) > 50
