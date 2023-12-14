@@ -11,17 +11,27 @@ namespace RazorPagesTestSample.Pages
     public class IndexModel : PageModel
     {
         private readonly AppDbContext _db;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public IndexModel(AppDbContext db)
+        public IndexModel(AppDbContext db, IHttpContextAccessor httpContextAccessor)
         {
             _db = db;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [BindProperty]
         public Message Message { get; set; }
 
         public IList<Message> Messages { get; private set; }
-
+        public string BaseUrl 
+        {
+            get 
+            {
+                var request = _httpContextAccessor.HttpContext.Request;
+                return $"{request.Scheme}://{request.Host}{request.PathBase}";
+            }
+        }
+        
         [TempData]
         public string MessageAnalysisResult { get; set; }
 
