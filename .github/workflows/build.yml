@@ -59,3 +59,35 @@ jobs:
       with:
         app-name: ${{ secrets.APP_NAME }}
         images: ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
+
+  deploy-test:
+    needs: build-image
+    runs-on: ubuntu-latest
+    environment: 
+      name: test
+    steps:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ secrets.APP_NAME }}
+        images: ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
+
+  deploy-prod:
+    needs: build-image
+    runs-on: ubuntu-latest
+    environment: 
+      name: prod
+    steps:
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ secrets.APP_NAME }}
+        images: ${{ env.registryName }}/${{ env.repositoryName }}:${{ env.tag }}
