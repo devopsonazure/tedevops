@@ -1,4 +1,4 @@
-name: .NET
+name: Build and Deploy
 
 env:
   registryName: ${{ secrets.ACR_LOGIN_SERVER }}
@@ -14,9 +14,7 @@ on:
 
 jobs:
   build-test:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET

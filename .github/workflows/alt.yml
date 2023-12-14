@@ -5,19 +5,16 @@ on:
 
 jobs:
 
-  loadtest:
-    name: Load Testing
+  load-testing:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout GitHub Actions 
+      - name: Checkout
         uses: actions/checkout@v2
-          
       - name: Login to Azure
         uses: azure/login@v1
         continue-on-error: false
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
+          creds: ${{ secrets.AZURE_CREDENTIALS }}        
       - name: Azure Load Testing
         id: azure_load_testing
         uses: azure/load-testing@v1
@@ -25,11 +22,9 @@ jobs:
           loadTestConfigFile: './JMeter/tealt-dev.yaml'
           loadTestResource: ${{ secrets.ALT_NAME }}
           resourceGroup: ${{ secrets.AZURE_RG }}
-
       - name: Save output
         if: failure()
-        run: echo "${{ steps.azure_load_testing.outputs }}" > output.txt
-
+        run: echo "${{ steps.azure_load_testing.outputs.result }}" > output.txt
       - name: Create Issue on Failure
         if: failure()
         uses: actions/github-script@v5
