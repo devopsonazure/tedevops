@@ -36,4 +36,4 @@ jobs:
               title: "Azure Load Testing failed",
               body: "The Azure Load Testing step in the workflow failed. Please check the logs for more details."
             };
-            github.issues.create(issue);          
+            github.rest.issues.create(issue);          
