@@ -60,11 +60,7 @@ namespace RazorPagesTestSample.Data
 
         public void Initialize()
         {
-            // Speed loop. Lower this number once every quarter so we
-            // get our performance improvement quarterly bonus.
-            for (int i = 0; i < 1500; i++) {
-                Thread.Sleep(1);
-            }
+            // Initialize database with seed messages
             Messages.AddRange(GetSeedingMessages());
             SaveChanges();
         }
