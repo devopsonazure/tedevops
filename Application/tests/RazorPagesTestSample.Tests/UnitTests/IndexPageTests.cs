@@ -30,7 +30,12 @@ namespace RazorPagesTestSample.Tests.UnitTests
             var expectedMessages = AppDbContext.GetSeedingMessages();
             mockAppDbContext.Setup(
                 db => db.GetMessagesAsync()).Returns(Task.FromResult(expectedMessages));
-            var pageModel = new IndexModel(mockAppDbContext.Object);
+            
+            var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            var httpContext = new DefaultHttpContext();
+            mockHttpContextAccessor.Setup(a => a.HttpContext).Returns(httpContext);
+            
+            var pageModel = new IndexModel(mockAppDbContext.Object, mockHttpContextAccessor.Object);
             #endregion
 
             #region snippet2
@@ -67,8 +72,10 @@ namespace RazorPagesTestSample.Tests.UnitTests
             {
                 ViewData = viewData
             };
-            var pageModel = new IndexModel(mockAppDbContext.Object)
-            {
+            
+            var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            mockHttpContextAccessor.Setup(a => a.HttpContext).Returns(httpContext);
+            var pageModel = new IndexModel(mockAppDbContext.Object, mockHttpContextAccessor.Object) {
                 PageContext = pageContext,
                 TempData = tempData,
                 Url = new UrlHelper(actionContext)
@@ -102,8 +109,10 @@ namespace RazorPagesTestSample.Tests.UnitTests
             {
                 ViewData = viewData
             };
-            var pageModel = new IndexModel(mockAppDbContext.Object)
-            {
+            
+            var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            mockHttpContextAccessor.Setup(a => a.HttpContext).Returns(httpContext);
+            var pageModel = new IndexModel(mockAppDbContext.Object, mockHttpContextAccessor.Object) {
                 PageContext = pageContext,
                 TempData = tempData,
                 Url = new UrlHelper(actionContext)
@@ -124,7 +133,11 @@ namespace RazorPagesTestSample.Tests.UnitTests
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("InMemoryDb");
             var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
-            var pageModel = new IndexModel(mockAppDbContext.Object);
+            
+            var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            var httpContext = new DefaultHttpContext();
+            mockHttpContextAccessor.Setup(a => a.HttpContext).Returns(httpContext);
+            var pageModel = new IndexModel(mockAppDbContext.Object, mockHttpContextAccessor.Object);
 
             // Act
             var result = await pageModel.OnPostDeleteAllMessagesAsync();
@@ -140,7 +153,11 @@ namespace RazorPagesTestSample.Tests.UnitTests
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("InMemoryDb");
             var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
-            var pageModel = new IndexModel(mockAppDbContext.Object);
+            
+            var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            var httpContext = new DefaultHttpContext();
+            mockHttpContextAccessor.Setup(a => a.HttpContext).Returns(httpContext);
+            var pageModel = new IndexModel(mockAppDbContext.Object, mockHttpContextAccessor.Object);
             var recId = 1;
 
             // Act
@@ -159,7 +176,11 @@ namespace RazorPagesTestSample.Tests.UnitTests
             var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
             var seedMessages = AppDbContext.GetSeedingMessages();
             mockAppDbContext.Setup(db => db.GetMessagesAsync()).Returns(Task.FromResult(seedMessages));
-            var pageModel = new IndexModel(mockAppDbContext.Object);
+            
+            var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            var httpContext = new DefaultHttpContext();
+            mockHttpContextAccessor.Setup(a => a.HttpContext).Returns(httpContext);
+            var pageModel = new IndexModel(mockAppDbContext.Object, mockHttpContextAccessor.Object);
             var wordCount = 0;
 
             foreach (var message in seedMessages)
@@ -186,7 +207,11 @@ namespace RazorPagesTestSample.Tests.UnitTests
                 .UseInMemoryDatabase("InMemoryDb");
             var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
             mockAppDbContext.Setup(db => db.GetMessagesAsync()).Returns(Task.FromResult(new List<Message>()));
-            var pageModel = new IndexModel(mockAppDbContext.Object);
+            
+            var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            var httpContext = new DefaultHttpContext();
+            mockHttpContextAccessor.Setup(a => a.HttpContext).Returns(httpContext);
+            var pageModel = new IndexModel(mockAppDbContext.Object, mockHttpContextAccessor.Object);
             var expectedMessageAnalysisResultString = "There are no messages to analyze.";
 
             // Act
